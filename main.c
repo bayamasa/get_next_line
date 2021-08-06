@@ -1,29 +1,34 @@
-#include <stdio.h>
-#include <fcntl.h>
-#include <unistd.h>
+#include "get_next_line.h"
+
+void	ft_lstadd_front(t_list **lst, t_list *new)
+{	
+	if (!lst || !new)
+		return ;
+	new->next = *lst;
+	*lst = new;
+}
+
+t_list	*ft_lstnew(int fd)
+{
+	t_list	*new_list;
+
+	new_list = (t_list *)malloc(sizeof(t_list));
+	if (new_list == NULL)
+		return (NULL);
+	new_list->fd = fd;
+	new_list->next = NULL;
+	return (new_list);
+}
 
 int main()
 {
-        int     fd;
-        char    buff[100+1];
-        int     rc;
+	t_list	*test;
+	t_list	*new;
 
-        fd = open("test.txt", O_RDONLY);
-        if (fd == -1)
-        {
-                printf("ファイルオープンエラー\n");
-			return(0);
-        }
-        rc = read(fd, buff, 5);
-        if (rc == -1)
-        {
-                printf("ファイル読み込みエラー\n");
-        }
-        else
-        {
-                // buff[rc] = '\0';
-                printf("read:%d - %s\n", rc, buff);
-        }
-        close(fd);
-		return(0);
+	test = ft_lstnew(5);
+	new = ft_lstnew(3);
+	printf("before test = %p\n", test);
+	ft_lstadd_front(&test, new);
+	printf("after new = %p\n", new);
+	printf("after test = %p\n", test);
 }
