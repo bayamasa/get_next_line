@@ -2,13 +2,13 @@
 # define GET_NEXT_LINE_H
 # define BUFFER_SIZE 1
 
-# include <limits.h>
 # include <stdlib.h>
+# include <sys/types.h>
 
 typedef struct s_list
 {
 	int				fd;
-	ssize_t			offset;
+	char			*buf;
 	struct s_list	*next;
 }	t_list;
 

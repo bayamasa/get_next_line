@@ -1,19 +1,25 @@
 #include "get_next_line.h"
 
-void	create_fd_list(t_list *list, int fd)
+t_list	*create_fd_list(t_list *fd_list, int fd)
 {
-	if (!list)
+	if (!fd_list)
 	{
-		list = (t_list *)malloc(sizeof(t_list));
-		list->fd = fd;
-		return ;
+		fd_list = (t_list *)malloc(sizeof(t_list));
+		fd_list->fd = fd;
+		fd_list->buf = "\0";
+		return (fd_list);
 	}
-
-	while ()
+	fd_list = fd_list->next;
+	while (fd_list)
 	{
-		/* code */
+		if (fd_list->fd == fd)
+			return (fd_list);
+		fd_list = fd_list->next;
 	}
-	
+	fd_list = (t_list *)malloc(sizeof(t_list));
+	fd_list->fd = fd;
+	fd_list->buf = "\0";
+	return (fd_list);
 }
 
 t_list *find_fd_list(t_list *fd_list, int fd)
@@ -36,13 +42,9 @@ t_list *find_fd_list(t_list *fd_list, int fd)
 char	*get_next_line(int fd)
 {
 	static t_list	*fd_list;
-	char			*buff;
-	char			*line;
-	ssize_t			lf;
-	//error handling
+	static t_list	*tg_list;
 
-	//fd_listを確認して値が存在しないことを確認
-	create_fd_list(fd_list, fd);
+	tg_list = create_fd_list(fd_list, fd);
 
 	// 読み込む文字列用の値をmallocしてあげる必要がある。
 	buff = (char *)malloc(sizeof(char) * BUFFER_SIZE);
