@@ -1,7 +1,7 @@
 #include "get_next_line.h"
 
 // 文字列検索で一致した箇所のindexを撮ってくる
-ssize_t	*ft_strchr_index(const char *s, int c)
+ssize_t	ft_strchr_index(const char *s, int c)
 {
 	ssize_t		i;
 	char		chr;

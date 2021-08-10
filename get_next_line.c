@@ -1,20 +1,24 @@
 #include "get_next_line.h"
+#include <stdio.h>
 
 t_list	*create_or_find_fd_list(t_list **fd_list, int fd)
 {
 	if (!*fd_list)
 	{
+		// printf("mallocしに来た。");
 		*fd_list = (t_list *)malloc(sizeof(t_list));
 		(*fd_list)->fd = fd;
 		(*fd_list)->buf = "\0";
 		return (*fd_list);
 	}
-	while ((*fd_list)->next)
+	while ((*fd_list))
 	{
 		if ((*fd_list)->fd == fd)
 			return (*fd_list);
-		(*fd_list) = (*fd_list)->next;
+		if(!((*fd_list)->next))
+			(*fd_list) = (*fd_list)->next;
 	}
+	// printf("Kita");
 	(*fd_list) = (t_list *)malloc(sizeof(t_list));
 	(*fd_list)->fd = fd;
 	(*fd_list)->buf = "\0";
@@ -63,6 +67,19 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	return (new_str);
 }
 
+// void	free_tg_list(t_list *fd_list, int fd)
+// {
+// 	while(fd_list->next)
+// 	{
+// 		if (fd_list->fd == fd)
+// 		{
+// 			free(fd_list);
+// 			return ;
+// 		}
+// 		fd_list = fd_list->next;
+// 	}
+// }
+
 char	*get_next_line(int fd)
 {
 	static t_list	*fd_list;
@@ -72,7 +89,14 @@ char	*get_next_line(int fd)
 	ssize_t			null_offset;
 	int				result;
 
-	tg_list = create_or_find_fd_list(fd_list, fd);
+	tg_list = create_or_find_fd_list(&fd_list, fd);
+	lf_offset = ft_strchr_index(tg_list->buf, '\n');
+	if (lf_offset != -1)
+	{
+		// reallocしないとメモリリークするかも。
+		tg_list->buf = ft_substr(tg_list->buf, lf_offset, ft_strchr_index(tg_list->buf, '\0'));	
+		return (ft_substr(tg_list->buf, 0, lf_offset));
+	}	
 	while (1)
 	{
 		tmp_str = (char *)malloc(sizeof(char) * BUFFER_SIZE);
@@ -81,8 +105,22 @@ char	*get_next_line(int fd)
 		{
 			//今まで当てたt_list側もfreeしないといけない。
 			free(tmp_str);
+			// free_tg_list(fd_list, fd);
+			if (*(tg_list->buf) != '\0')
+			{
+				// tmp_str = (char *)malloc(sizeof(char) * ft_strlen(tg_list->buf));
+				// tmp_str = tg_list->buf;
+				// free(tg_list);
+				return (tg_list->buf);
+			}
+			free(tg_list);
+			fd_list = NULL;
 			return (NULL);
 		}
+		// if (result == -1)
+		// {
+		// 	//エラー処理を行う。
+		// }
 		lf_offset = ft_strchr_index(tmp_str, '\n');
 		if (lf_offset != -1)
 		{
@@ -90,7 +128,7 @@ char	*get_next_line(int fd)
 			tg_list->buf = ft_strjoin(tg_list->buf, \
 				ft_substr(tmp_str, lf_offset, null_offset));
 			free(tmp_str);
-			return (ft_substr(tmp_str, 0, lf_offset));
+			return (tg_list->buf);
 		}else {
 			tg_list->buf = ft_strjoin(tg_list->buf, \
 				ft_substr(tmp_str, 0, BUFFER_SIZE));
