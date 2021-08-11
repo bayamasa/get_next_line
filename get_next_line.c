@@ -5,7 +5,6 @@ t_list	*create_or_find_fd_list(t_list **fd_list, int fd)
 {
 	if (!*fd_list)
 	{
-		// printf("mallocしに来た。");
 		*fd_list = (t_list *)malloc(sizeof(t_list));
 		(*fd_list)->fd = fd;
 		(*fd_list)->buf = "\0";
@@ -18,7 +17,6 @@ t_list	*create_or_find_fd_list(t_list **fd_list, int fd)
 		if(!((*fd_list)->next))
 			(*fd_list) = (*fd_list)->next;
 	}
-	// printf("Kita");
 	(*fd_list) = (t_list *)malloc(sizeof(t_list));
 	(*fd_list)->fd = fd;
 	(*fd_list)->buf = "\0";
@@ -64,6 +62,8 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		return (NULL);
 	ft_strlcpy(new_str, s1, s1_len + 1);
 	ft_strlcat(new_str, s2, s1_len + s2_len + 1);
+	// free((void *)s1);
+	free((void *)s2);
 	return (new_str);
 }
 
@@ -88,6 +88,7 @@ char	*get_next_line(int fd)
 	ssize_t			lf_offset;
 	ssize_t			null_offset;
 	int				result;
+	char			*ret_str;
 
 	tg_list = create_or_find_fd_list(&fd_list, fd);
 	lf_offset = ft_strchr_index(tg_list->buf, '\n');
@@ -111,7 +112,12 @@ char	*get_next_line(int fd)
 				// tmp_str = (char *)malloc(sizeof(char) * ft_strlen(tg_list->buf));
 				// tmp_str = tg_list->buf;
 				// free(tg_list);
-				return (tg_list->buf);
+				ret_str = ft_strdup(tg_list->buf);
+				free(tg_list->buf);
+				tg_list->buf = NULL;
+				free(tg_list);
+				fd_list = NULL;
+				return (ret_str);
 			}
 			free(tg_list);
 			fd_list = NULL;
@@ -125,14 +131,15 @@ char	*get_next_line(int fd)
 		if (lf_offset != -1)
 		{
 			null_offset = ft_strchr_index(tmp_str, '\0');
-			tg_list->buf = ft_strjoin(tg_list->buf, \
+			// 今の問題 tmp_strがfreeできない
+			// case bufに入っている値とtmp_strに入っている値をjoinして、returnしたい。
+			// ret_str
+			ret_str = ft_strjoin(tg_list->buf, \
 				ft_substr(tmp_str, lf_offset, null_offset));
-			free(tmp_str);
-			return (tg_list->buf);
-		}else {
+			return (ret_str);
+		} else {
 			tg_list->buf = ft_strjoin(tg_list->buf, \
 				ft_substr(tmp_str, 0, BUFFER_SIZE));
 		}
-		free(tmp_str);
 	}
 }

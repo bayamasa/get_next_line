@@ -52,6 +52,7 @@ char	*ft_strdup(const char *src)
 		i++;
 	}
 	dest[i] = '\0';
+	free((void *)src);
 	return (dest);
 }
 
@@ -89,5 +90,6 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	if (str == NULL)
 		return (NULL);
 	ft_strlcpy(str, s + start, len + 1);
+	free((void *)s);
 	return (str);
 }
