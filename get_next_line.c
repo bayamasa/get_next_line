@@ -19,7 +19,7 @@ t_list	*create_or_find_fd_list(t_list **fd_list, int fd)
 	}
 	(*fd_list) = (t_list *)malloc(sizeof(t_list));
 	(*fd_list)->fd = fd;
-	(*fd_list)->buf = "\0";
+	(*fd_list)->buf = ft_strdup("\0");
 	return ((*fd_list));
 }
 
@@ -63,18 +63,18 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	ft_strlcpy(new_str, s1, s1_len + 1);
 	ft_strlcat(new_str, s2, s1_len + s2_len + 1);
 	free((void *)s1);
-	s1 = NULL;
+	// s1 = NULL;
 	free((void *)s2);
 	return (new_str);
 }
 
-// void	// free_tg_list(t_list *fd_list, int fd)
+// void	// // free_tg_list(t_list *fd_list, int fd)
 // {
 // 	while(fd_list->next)
 // 	{
 // 		if (fd_list->fd == fd)
 // 		{
-// 			// free(fd_list);
+// 			// // free(fd_list);
 // 			return ;
 // 		}
 // 		fd_list = fd_list->next;
@@ -96,7 +96,6 @@ char	*get_next_line(int fd)
 	lf_offset = ft_strchr_index(tg_list->buf, '\n');
 	if (lf_offset != -1)
 	{
-		printf("KITA");
 		next_lf_offset = ft_strchr_index(tg_list->buf + lf_offset, '\n');
 		if (next_lf_offset != -1)
 		{
@@ -126,7 +125,7 @@ char	*get_next_line(int fd)
 				fd_list = NULL;
 				return (ret_str);
 			}
-			// free(tg_list->buf);
+			// // free(tg_list->buf);
 			free(fd_list);
 			fd_list = NULL;
 			return (NULL);
