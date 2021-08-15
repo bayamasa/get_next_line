@@ -52,7 +52,7 @@ char	*ft_strdup(const char *src)
 		i++;
 	}
 	dest[i] = '\0';
-	free((void *)src);
+	// free((void *)src);
 	return (dest);
 }
 
@@ -86,10 +86,10 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 		return (ft_strdup(""));
 	if (size < len)
 		len = size;
-	str = (char *)malloc(sizeof(char) * (len + 1));
+	str = (char *)malloc(sizeof(char) * (len));
 	if (str == NULL)
 		return (NULL);
 	ft_strlcpy(str, s + start, len + 1);
-	free((void *)s);
+	// free((void *)s);
 	return (str);
 }
