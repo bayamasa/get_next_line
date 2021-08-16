@@ -1,5 +1,4 @@
 #include "get_next_line.h"
-#include <stdio.h>
 
 t_list	*create_or_find_fd_list(t_list **fd_list, int fd)
 {
@@ -62,24 +61,11 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		return (NULL);
 	ft_strlcpy(new_str, s1, s1_len + 1);
 	ft_strlcat(new_str, s2, s1_len + s2_len + 1);
-	free((void *)s1);
+	free((char *)s1);
 	// s1 = NULL;
-	free((void *)s2);
+	free((char *)s2);
 	return (new_str);
 }
-
-// void	// // free_tg_list(t_list *fd_list, int fd)
-// {
-// 	while(fd_list->next)
-// 	{
-// 		if (fd_list->fd == fd)
-// 		{
-// 			// // free(fd_list);
-// 			return ;
-// 		}
-// 		fd_list = fd_list->next;
-// 	}
-// }
 
 char	*get_next_line(int fd)
 {
@@ -90,22 +76,13 @@ char	*get_next_line(int fd)
 	ssize_t			null_offset;
 	int				result;
 	char			*ret_str;
-	int				next_lf_offset;
 
 	tg_list = create_or_find_fd_list(&fd_list, fd);
 	lf_offset = ft_strchr_index(tg_list->buf, '\n');
 	if (lf_offset != -1)
 	{
-		next_lf_offset = ft_strchr_index(tg_list->buf + lf_offset, '\n');
-		if (next_lf_offset != -1)
-		{
-			ret_str = ft_substr(tg_list->buf, lf_offset, next_lf_offset);
-			tg_list->buf = ft_substr(tg_list->buf, next_lf_offset, ft_strchr_index(tg_list->buf, '\0'));
-		}
-		else
-		{
-			ret_str = ft_substr(tg_list->buf, lf_offset, ft_strchr_index(tg_list->buf, '\0'));
-		}
+		ret_str = ft_substr(tg_list->buf, 0, lf_offset + 1);
+		tg_list->buf = ft_substr(tg_list->buf, lf_offset + 1, ft_strchr_index(tg_list->buf, '\0'));
 		return (ret_str);	
 	}	
 	while (1)
@@ -119,7 +96,7 @@ char	*get_next_line(int fd)
 			if (*(tg_list->buf) != '\0')
 			{
 				ret_str = ft_strdup(tg_list->buf);
-				// free(tg_list->buf);
+				free(tg_list->buf);
 				tg_list->buf = NULL;
 				free(fd_list);
 				fd_list = NULL;
