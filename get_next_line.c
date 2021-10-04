@@ -1,14 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mhirabay <mhirabay@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/10/04 15:59:07 by mhirabay          #+#    #+#             */
+/*   Updated: 2021/10/04 16:02:22 by mhirabay         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
 
 t_list	*create_or_find_fd_list(t_list **fd_list, int fd)
 {
-	// if (!*fd_list)
-	// {
-	// 	*fd_list = (t_list *)malloc(sizeof(t_list));
-	// 	(*fd_list)->fd = fd;
-	// 	(*fd_list)->buf = "\0";
-	// 	return (*fd_list);
-	// }
 	while ((*fd_list))
 	{
 		if ((*fd_list)->fd == fd)
@@ -17,6 +22,8 @@ t_list	*create_or_find_fd_list(t_list **fd_list, int fd)
 			(*fd_list) = (*fd_list)->next;
 	}
 	(*fd_list) = (t_list *)malloc(sizeof(t_list));
+	if(*fd_list == NULL)
+		return (NULL);
 	(*fd_list)->fd = fd;
 	(*fd_list)->buf = ft_strdup("\0");
 	return ((*fd_list));
@@ -62,7 +69,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	ft_strlcpy(new_str, s1, s1_len + 1);
 	ft_strlcat(new_str, s2, s1_len + s2_len + 1);
 	free((char *)s1);
-	// s1 = NULL;
+	s1 = NULL;
 	free((char *)s2);
 	return (new_str);
 }
@@ -82,17 +89,21 @@ char	*get_next_line(int fd)
 	if (lf_offset != -1)
 	{
 		ret_str = ft_substr(tg_list->buf, 0, lf_offset + 1);
-		tg_list->buf = ft_substr(tg_list->buf, lf_offset + 1, ft_strchr_index(tg_list->buf, '\0'));
+		tmp_str = ft_substr(tg_list->buf, lf_offset + 1, ft_strchr_index(tg_list->buf, '\0'));
+		free(tg_list->buf);
+		tg_list->buf = tmp_str;
 		return (ret_str);	
 	}	
 	while (1)
 	{
-		tmp_str = (char *)malloc(sizeof(char) * BUFFER_SIZE);
+		tmp_str = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1UL);
+		if (tmp_str == NULL)
+			return (NULL);
 		result = read(fd, tmp_str, BUFFER_SIZE);
+		tmp_str[result] = '\0';
 		if (result <= 0)
 		{
 			free(tmp_str);
-			// tmp_str = NULL;
 			if (*(tg_list->buf) != '\0')
 			{
 				ret_str = ft_strdup(tg_list->buf);
@@ -102,7 +113,8 @@ char	*get_next_line(int fd)
 				fd_list = NULL;
 				return (ret_str);
 			}
-			// // free(tg_list->buf);
+			free(tg_list->buf);
+			tg_list->buf = NULL;
 			free(fd_list);
 			fd_list = NULL;
 			return (NULL);

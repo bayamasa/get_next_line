@@ -1,6 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mhirabay <mhirabay@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/10/04 15:59:01 by mhirabay          #+#    #+#             */
+/*   Updated: 2021/10/04 15:59:02 by mhirabay         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
 
-// 文字列検索で一致した箇所のindexを撮ってくる
 ssize_t	ft_strchr_index(const char *s, int c)
 {
 	ssize_t		i;
@@ -52,7 +63,6 @@ char	*ft_strdup(const char *src)
 		i++;
 	}
 	dest[i] = '\0';
-	// free((void *)src);
 	return (dest);
 }
 
@@ -90,6 +100,5 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	if (str == NULL)
 		return (NULL);
 	ft_strlcpy(str, s + start, len + 1);
-	// free((void *)s);
 	return (str);
 }
