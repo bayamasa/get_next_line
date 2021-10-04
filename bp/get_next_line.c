@@ -6,7 +6,7 @@
 /*   By: mhirabay <mhirabay@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/04 15:59:07 by mhirabay          #+#    #+#             */
-/*   Updated: 2021/10/04 17:17:21 by mhirabay         ###   ########.fr       */
+/*   Updated: 2021/10/04 16:02:22 by mhirabay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,10 @@
 
 t_list	*create_or_find_fd_list(t_list **fd_list, int fd)
 {
-	//既にあるリソースからfdを探してくる
-	while (*fd_list)
+	while ((*fd_list))
 	{
-		// fdが見つかった場合はfdを返す
 		if ((*fd_list)->fd == fd)
 			return (*fd_list);
-		// nextが存在しない場合は、nextを現在のアドレスにする。
-		// そんでwhileでループが終了することによってmallocが発動する。
 		if(!((*fd_list)->next))
 			(*fd_list) = (*fd_list)->next;
 	}
@@ -89,16 +85,11 @@ char	*get_next_line(int fd)
 	char			*ret_str;
 
 	tg_list = create_or_find_fd_list(&fd_list, fd);
-	// tg_listがあった場合もなかった場合も、\nが存在するか検索する
 	lf_offset = ft_strchr_index(tg_list->buf, '\n');
-	// 改行があった時
 	if (lf_offset != -1)
 	{
-		// 戻り値に返すsubstr: ret_str
 		ret_str = ft_substr(tg_list->buf, 0, lf_offset + 1);
-		// 保存しておくsubstr: tmp_str
 		tmp_str = ft_substr(tg_list->buf, lf_offset + 1, ft_strchr_index(tg_list->buf, '\0'));
-		// freeして付け替え
 		free(tg_list->buf);
 		tg_list->buf = tmp_str;
 		return (ret_str);	
@@ -110,7 +101,6 @@ char	*get_next_line(int fd)
 			return (NULL);
 		result = read(fd, tmp_str, BUFFER_SIZE);
 		tmp_str[result] = '\0';
-		//もう読みこむファイルが無い時
 		if (result <= 0)
 		{
 			free(tmp_str);

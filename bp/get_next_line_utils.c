@@ -6,7 +6,7 @@
 /*   By: mhirabay <mhirabay@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/04 15:59:01 by mhirabay          #+#    #+#             */
-/*   Updated: 2021/10/04 23:20:23 by mhirabay         ###   ########.fr       */
+/*   Updated: 2021/10/04 15:59:02 by mhirabay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,29 +32,16 @@ ssize_t	ft_strchr_index(const char *s, int c)
 	return (-1);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+size_t	ft_strlen(const char *str)
 {
-	char	*new_str;
-	size_t	s1_len;
-	size_t	s2_len;
+	size_t	i;
 
-	s1_len = 0;
-	s2_len = 0;
-	if (!s1 || !s2)
-		return (NULL);
-	while (s1[s1_len] != '\0')
-		s1_len++;
-	while (s2[s2_len] != '\0')
-		s2_len++;
-	new_str = (char *)malloc(sizeof(char) * (s1_len + s2_len + 1));
-	if (new_str == NULL)
-		return (NULL);
-	ft_strlcpy(new_str, s1, s1_len + 1);
-	ft_strlcpy(new_str + s1_len, s2, s1_len + s2_len + 1);
-	free((char *)s1);
-	s1 = NULL;
-	free((char *)s2);
-	return (new_str);
+	i = 0;
+	while (str[i] != '\0')
+	{
+		i++;
+	}
+	return (i);
 }
 
 char	*ft_strdup(const char *src)
@@ -63,12 +50,10 @@ char	*ft_strdup(const char *src)
 	size_t		len;
 	char		*dest;
 
-	len = 0;
 	if (src == NULL)
 		return (NULL);
 	i = 0;
-	while (src[len] != '\0')
-		len++;
+	len = ft_strlen(src);
 	dest = (char *)malloc(sizeof(char) * (len + 1));
 	if (dest == NULL)
 		return (NULL);
@@ -85,11 +70,9 @@ size_t	ft_strlcpy(char *dest, const char *src, size_t size)
 {
 	size_t	i;
 
-	i = 0;
 	if (!src)
 		return (0);
-	while (src[i] != '\0')
-		i++;
+	i = ft_strlen(src);
 	if (size == 0)
 		return (i);
 	while (*src && (size - 1))
@@ -106,11 +89,9 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	char			*str;
 	size_t			size;
 
-	size = 0;
 	if (s == NULL)
 		return (NULL);
-	while (s[size] != '\0')
-		size++;
+	size = ft_strlen(s);
 	if (size < start)
 		return (ft_strdup(""));
 	if (size < len)
