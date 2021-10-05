@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mhirabay <mhirabay@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/04 16:12:31 by mhirabay          #+#    #+#             */
-/*   Updated: 2021/10/04 16:12:32 by mhirabay         ###   ########.fr       */
+/*   Created: 2021/10/04 16:12:13 by mhirabay          #+#    #+#             */
+/*   Updated: 2021/10/04 23:36:05 by mhirabay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,5 +34,6 @@ ssize_t	ft_strchr_index(const char *s, int c);
 char	*ft_strdup(const char *src);
 size_t	ft_strlcpy(char *dest, const char *src, size_t size);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
+char	*ft_strjoin(char const *s1, char const *s2);
 
 #endif
