@@ -6,7 +6,7 @@
 /*   By: mhirabay <mhirabay@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/04 16:12:13 by mhirabay          #+#    #+#             */
-/*   Updated: 2021/10/04 23:36:05 by mhirabay         ###   ########.fr       */
+/*   Updated: 2021/10/09 16:46:38 by mhirabay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define GET_NEXT_LINE_H
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 10000000
+#  define BUFFER_SIZE 2147483647
 # endif
 
 # include <stdlib.h>
