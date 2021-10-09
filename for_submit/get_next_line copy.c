@@ -6,11 +6,12 @@
 /*   By: mhirabay <mhirabay@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/04 15:59:07 by mhirabay          #+#    #+#             */
-/*   Updated: 2021/10/04 23:36:41 by mhirabay         ###   ########.fr       */
+/*   Updated: 2021/10/07 21:41:23 by mhirabay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <stdio.h>
 
 t_list	*create_or_find_fd_list(t_list **fd_list, int fd)
 {
@@ -107,11 +108,13 @@ char	*get_next_line(int fd)
 		return (ret_str);
 	while (1)
 	{
+		if (BUFFER_SIZE <= 0)
+			return (NULL);
 		tmp_str = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1UL);
 		if (tmp_str == NULL)
 			return (NULL);
 		result = read(fd, tmp_str, BUFFER_SIZE);
-		tmp_str[result] = '\0';
+		*(tmp_str + result) = '\0';
 		if (result <= 0)
 			return (process_read_done(&tmp_str, &fd_list, &tg_list));
 		ret_str = process_read_internal(tmp_str, tg_list);

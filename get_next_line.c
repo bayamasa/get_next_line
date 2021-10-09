@@ -6,7 +6,7 @@
 /*   By: mhirabay <mhirabay@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/04 15:59:07 by mhirabay          #+#    #+#             */
-/*   Updated: 2021/10/06 17:07:46 by mhirabay         ###   ########.fr       */
+/*   Updated: 2021/10/09 16:11:34 by mhirabay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,12 @@ char	*process_read_internal(char *tmp_str, t_list *tg_list)
 	return (NULL);
 }
 
-char	*process_read_done(char **tmp, t_list **fd_list, t_list **tg_list)
+char	*process_read_done(ssize_t result, char **tmp, t_list **fd_list, t_list **tg_list)
 {
 	char	*ret_str;
 
+	if (result == -1)
+		return (NULL);
 	free(*tmp);
 	if (*((*tg_list)->buf) != '\0')
 	{
@@ -93,27 +95,39 @@ char	*process_read_before(t_list *tg_list)
 	return (NULL);
 }
 
+#include <stdio.h>
+
 char	*get_next_line(int fd)
 {
 	static t_list	*fd_list;
 	t_list			*tg_list;
 	char			*tmp_str;
-	int				result;
+	ssize_t			result;
 	char			*ret_str;
 
+	if (BUFFER_SIZE <= 0)
+	{
+		return (NULL);
+	}
 	tg_list = create_or_find_fd_list(&fd_list, fd);
 	ret_str = process_read_before(tg_list);
 	if (ret_str)
 		return (ret_str);
 	while (1)
 	{
-		tmp_str = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1UL);
+		tmp_str = (char *)malloc(sizeof(char) * (ssize_t)BUFFER_SIZE + 1);
 		if (tmp_str == NULL)
 			return (NULL);
+		printf("fd = %d\n", fd);
 		result = read(fd, tmp_str, BUFFER_SIZE);
+		if (result == -1)
+		{
+			printf("null に kita\n");
+			return (NULL);
+		}
 		*(tmp_str + result) = '\0';
 		if (result <= 0)
-			return (process_read_done(&tmp_str, &fd_list, &tg_list));
+			return (process_read_done(fd, &tmp_str, &fd_list, &tg_list));
 		ret_str = process_read_internal(tmp_str, tg_list);
 		if (ret_str != NULL)
 			return (ret_str);
