@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   main_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mhirabay <mhirabay@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/09 18:01:44 by mhirabay          #+#    #+#             */
-/*   Updated: 2021/10/10 15:48:27 by mhirabay         ###   ########.fr       */
+/*   Updated: 2021/10/10 15:57:14 by mhirabay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,15 +203,10 @@ void bonus_multiple_open()
 	int fd2 = open("files/with_nl", O_RDONLY);
 	int fd3 = open("files/multiple_line_with_nl", O_RDONLY);
 	char *str1 = get_next_line(fd1);
-	printf("1\n");
 	char *str2 = get_next_line(fd2);
-	printf("2\n");
 	char *str3 = get_next_line(fd3);
-	printf("3\n");	
 	char *str4 = get_next_line(fd1);
-	printf("4\n");
 	char *str5 = get_next_line(fd2);
-	printf("5\n");
 	char *c = get_next_line(10000);
 	char *str6 = get_next_line(fd3);
 	char *str7 = get_next_line(fd2);
@@ -262,15 +257,7 @@ void test_invalid_fd()
 int main()
 {
 	printf("--------------------------------\n");
-	// bonus_multiple_open();
 	test_no_nl();
-	test_nl();
-	test_empty();
-	test_with_nl();
-	test_multiple_line_no_nl();
-	test_multiple_line_with_nl();
-	test_mutiple_line_and_nl_eof_nl();
-	test_big_line_with_nl();
 	// bonus_multiple_open();
 	printf("--------------------------------\n");
 	// check_leaks();

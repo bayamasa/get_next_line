@@ -2,6 +2,7 @@
 #include <limits.h>
 #include <libc.h>
 #include "get_next_line.h"
+void check_leaks();
 
 int main()
 {
@@ -10,6 +11,8 @@ int main()
 	printf("str1 : %s\n", str1);
 	free(str1);
 	close(fd);
+	// check_leaks();
+	system("leaks a.out");
 	return (0);
 }
 

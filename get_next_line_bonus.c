@@ -6,27 +6,27 @@
 /*   By: mhirabay <mhirabay@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/04 15:59:07 by mhirabay          #+#    #+#             */
-/*   Updated: 2021/10/09 22:36:36 by mhirabay         ###   ########.fr       */
+/*   Updated: 2021/10/10 15:54:21 by mhirabay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line_bonus.h"
+#include "get_next_line.h"
+#include <stdio.h>
 
-t_list	*create_or_find_fd_list(t_list **fd_list, int fd)
+t_list	*create_or_find_fd_list(t_list *fd_list, int fd)
 {
-	while ((*fd_list))
+	while (fd_list != NULL)
 	{
-		if ((*fd_list)->fd == fd)
-			return (*fd_list);
-		if (!((*fd_list)->next))
-			(*fd_list) = (*fd_list)->next;
+		if ((fd_list)->fd == fd)
+			return (fd_list);
+		fd_list = (fd_list)->next;
 	}
-	(*fd_list) = (t_list *)malloc(sizeof(t_list));
-	if (*fd_list == NULL)
+	(fd_list) = (t_list *)malloc(sizeof(t_list));
+	if (fd_list == NULL)
 		return (NULL);
-	(*fd_list)->fd = fd;
-	(*fd_list)->buf = ft_strdup("\0");
-	return ((*fd_list));
+	(fd_list)->fd = fd;
+	(fd_list)->buf = ft_strdup("\0");
+	return ((fd_list));
 }
 
 char	*process_read_internal(char *tmp_str, t_list *tg_list)
@@ -104,7 +104,9 @@ char	*get_next_line(int fd)
 
 	if (BUFFER_SIZE <= 0)
 		return (NULL);
-	tg_list = create_or_find_fd_list(&fd_list, fd);
+	// アドレス値が固定されていないから毎回の呼び出しでアドレスが違うものが呼ばれてしまう。
+	tg_list = create_or_find_fd_list(fd_list, fd);
+	// printf("tg_list = %p\n", tg_list);
 	ret_str = process_read_before(tg_list);
 	if (ret_str)
 		return (ret_str);
