@@ -6,7 +6,7 @@
 /*   By: mhirabay <mhirabay@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/04 16:12:13 by mhirabay          #+#    #+#             */
-/*   Updated: 2021/10/09 21:01:35 by mhirabay         ###   ########.fr       */
+/*   Updated: 2021/10/10 20:27:17 by mhirabay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ typedef struct s_list
 {
 	int				fd;
 	char			*buf;
+	struct s_list	*prev;
 	struct s_list	*next;
 }	t_list;
 
