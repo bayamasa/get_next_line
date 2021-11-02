@@ -6,7 +6,7 @@
 /*   By: mhirabay <mhirabay@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/09 18:01:44 by mhirabay          #+#    #+#             */
-/*   Updated: 2021/10/25 19:55:11 by mhirabay         ###   ########.fr       */
+/*   Updated: 2021/10/29 15:16:00 by mhirabay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -267,6 +267,7 @@ int main()
 	test_multiple_line_with_nl();
 	test_mutiple_line_and_nl_eof_nl();
 	test_big_line_with_nl();
+	get_next_line(50);
 	printf("--------------------------------\n");
 	system("leaks a.out");
 	return (0);
