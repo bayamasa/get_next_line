@@ -6,7 +6,7 @@
 /*   By: mhirabay <mhirabay@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/04 16:12:13 by mhirabay          #+#    #+#             */
-/*   Updated: 2021/10/09 17:06:09 by mhirabay         ###   ########.fr       */
+/*   Updated: 2021/10/28 13:38:14 by mhirabay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,10 @@ typedef struct s_list
 }	t_list;
 
 char	*get_next_line(int fd);
+t_list	*create_or_find_fd_list(t_list **fd_list, int fd);
+char	*process_read_internal(char *tmp_str, t_list *tg_list);
+char	*process_read_done(char **tmp, t_list **fd_list, t_list **tg_list);
+char	*process_read_before(t_list *tg_list);
 size_t	ft_strlen(const char *str);
 ssize_t	ft_strchr_index(const char *s, int c);
 char	*ft_strdup(const char *src);
