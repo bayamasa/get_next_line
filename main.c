@@ -6,7 +6,7 @@
 /*   By: mhirabay <mhirabay@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/09 18:01:44 by mhirabay          #+#    #+#             */
-/*   Updated: 2021/10/29 15:16:00 by mhirabay         ###   ########.fr       */
+/*   Updated: 2021/11/06 13:06:09 by mhirabay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,7 +212,6 @@ void bonus_multiple_open()
 	printf("4\n");
 	char *str5 = get_next_line(fd2);
 	printf("5\n");
-	char *c = get_next_line(10000);
 	char *str6 = get_next_line(fd3);
 	char *str7 = get_next_line(fd2);
 	char *str8 = get_next_line(fd3);
@@ -254,6 +253,8 @@ void test_invalid_fd()
 	char *c = get_next_line(10000);
 	// char *d = get_next_line(-1);
 	free(a);
+	free(b);
+	free(c);
 }
 
 int main()
@@ -268,7 +269,8 @@ int main()
 	test_mutiple_line_and_nl_eof_nl();
 	test_big_line_with_nl();
 	get_next_line(50);
+	test_invalid_fd();
 	printf("--------------------------------\n");
-	system("leaks a.out");
+	// system("leaks a.out");
 	return (0);
 }
