@@ -6,7 +6,7 @@
 /*   By: mhirabay <mhirabay@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/09 18:01:44 by mhirabay          #+#    #+#             */
-/*   Updated: 2021/11/06 13:06:09 by mhirabay         ###   ########.fr       */
+/*   Updated: 2021/11/07 18:07:54 by mhirabay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,11 @@ void	expect_str(char *str1, char *str2, char *test_target)
 	if (str1 == NULL && (BUFFER_SIZE <= 0 || BUFFER_SIZE > INT_MAX))
 	{
 		printf("OK : BUFFER_SIZE IS NULL\n");
+		return ;
+	}
+	if (str1 == NULL)
+	{
+		printf("ERR : RES IS NULL\n");
 		return ;
 	}
 	if (strcmp(str1, str2) == 0)
@@ -267,10 +272,11 @@ int main()
 	test_multiple_line_no_nl();
 	test_multiple_line_with_nl();
 	test_mutiple_line_and_nl_eof_nl();
-	test_big_line_with_nl();
-	get_next_line(50);
-	test_invalid_fd();
+	
+	// test_big_line_with_nl();
+	// get_next_line(50);
+	// test_invalid_fd();
 	printf("--------------------------------\n");
-	// system("leaks a.out");
+	system("leaks a.out");
 	return (0);
 }
