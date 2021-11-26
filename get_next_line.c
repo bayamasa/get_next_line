@@ -6,7 +6,7 @@
 /*   By: mhirabay <mhirabay@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/04 15:59:07 by mhirabay          #+#    #+#             */
-/*   Updated: 2021/11/07 20:40:02 by mhirabay         ###   ########.fr       */
+/*   Updated: 2021/11/26 11:53:01 by mhirabay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,15 @@ t_list	*create_or_find_fd_list(t_list **fd_list, int fd)
 			(*fd_list) = (*fd_list)->next;
 	}
 	(*fd_list) = (t_list *)malloc(sizeof(t_list));
+	// leakなし
+	// (*fd_list) = NULL;
 	if (*fd_list == NULL)
 		return (NULL);
 	(*fd_list)->fd = fd;
 	(*fd_list)->buf = ft_strdup("\0");
+
+	// ok
+	// (*fd_list)->buf = NULL;
 	if ((*fd_list)->buf == NULL)
 	{
 		free(*fd_list);
@@ -43,21 +48,35 @@ char	*process_read_internal(char *tmp_str, t_list *tg_list)
 
 	lf_offset = ft_strchr_index(tmp_str, '\n');
 	null_offset = ft_strchr_index(tmp_str, '\0');
+
+	if(tg_list->buf == NULL)
+		return (NULL);
+
 	if (lf_offset != -1)
 	{
-		ret_str = ft_strjoin(tg_list->buf, \
-			ft_substr(tmp_str, 0, lf_offset + 1));
+		ret_str = ft_strjoin(tg_list->buf, ft_substr(tmp_str, 0, lf_offset + 1));
+		// ok
+		// ret_str = NULL;
 		if (!ret_str)
 			free(tg_list->buf);
-		// ここがnullだとセグフォ
+		
 		tg_list->buf = ft_substr(tmp_str, lf_offset + 1, null_offset);
+
+		// ここがnullだとleak
+		// tg_list->buf = NULL;
+		// if(tg_list->buf == NULL)
+		// {
+		// 	free(ret_str);
+		// 	ret_str = NULL;
+		// }
 		free(tmp_str);
 		tmp_str = NULL;
 		return (ret_str);
 	}
-	// ここがnullだとセグフォ
-	tg_list->buf = ft_strjoin(tg_list->buf, \
-		ft_substr(tmp_str, 0, null_offset));
+	
+	tg_list->buf = ft_strjoin(tg_list->buf, ft_substr(tmp_str, 0, null_offset));
+	// ここがnullだとleak
+	// tg_list->buf = NULL; 
 	free(tmp_str);
 	tmp_str = NULL;
 	return (NULL);
@@ -68,9 +87,19 @@ char	*process_read_done(char **tmp, t_list **fd_list, t_list **tg_list)
 	char	*ret_str;
 
 	free(*tmp);
+	if ((*tg_list)->buf == NULL)
+	{
+		// free((*tg_list)->buf);
+		// (*tg_list)->buf = NULL;
+		// free(*fd_list);
+		// *fd_list = NULL;
+		return (NULL);
+	}
 	if (*((*tg_list)->buf) != '\0')
 	{
 		ret_str = ft_strdup((*tg_list)->buf);
+		// ok
+		// ret_str = NULL;
 		free((*tg_list)->buf);
 		(*tg_list)->buf = NULL;
 		free(*fd_list);
@@ -90,13 +119,25 @@ char	*process_read_before(t_list *tg_list)
 	char			*ret_str;
 	char			*tmp_str;
 
+	if (tg_list->buf == NULL)
+		return (NULL);
 	lf_offset = ft_strchr_index(tg_list->buf, '\n');
+	// 改行が存在した場合
 	if (lf_offset != -1)
 	{
 		ret_str = ft_substr(tg_list->buf, 0, lf_offset + 1);
-		// ここがnullでもセグフォ
-		tmp_str = ft_substr(tg_list->buf, lf_offset + 1, \
-		ft_strchr_index(tg_list->buf, '\0'));
+		// ok
+		// ret_str = NULL;
+		tmp_str = ft_substr(tg_list->buf, lf_offset + 1, ft_strchr_index(tg_list->buf, '\0'));
+		// ここがnullだとleak
+		// tmp_str = NULL;
+		if (tmp_str == NULL)
+		{
+			// この方法でいけた
+			free(ret_str);
+			ret_str = NULL;
+			return (ret_str);
+		}
 		free(tg_list->buf);
 		tg_list->buf = tmp_str;
 		return (ret_str);

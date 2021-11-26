@@ -6,7 +6,7 @@
 /*   By: mhirabay <mhirabay@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/09 18:01:44 by mhirabay          #+#    #+#             */
-/*   Updated: 2021/11/07 18:07:54 by mhirabay         ###   ########.fr       */
+/*   Updated: 2021/11/26 11:50:52 by mhirabay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	expect_str(char *str1, char *str2, char *test_target)
 	}
 	else
 	{
-		printf("KO\n");
+		printf("KO : %s \n", test_target);
 		printf("actual : %s\n", str1);
 		printf("expect : %s\n", str2);
 	}
@@ -58,7 +58,7 @@ void	expect_null(char *str, char *test_target)
 	}
 	else
 	{
-		printf("KO\n");
+		printf("KO : %s \n", test_target);
 	}
 }
 
@@ -265,13 +265,13 @@ void test_invalid_fd()
 int main()
 {
 	printf("--------------------------------\n");
-	test_no_nl();
-	test_nl();
-	test_empty();
-	test_with_nl();
-	test_multiple_line_no_nl();
+	// test_no_nl();
+	// test_nl();
+	// test_empty();
+	// test_with_nl();
+	// test_multiple_line_no_nl();
 	test_multiple_line_with_nl();
-	test_mutiple_line_and_nl_eof_nl();
+	// test_mutiple_line_and_nl_eof_nl();
 	
 	// test_big_line_with_nl();
 	// get_next_line(50);
