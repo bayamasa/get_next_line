@@ -6,7 +6,7 @@
 /*   By: mhirabay <mhirabay@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/04 15:59:01 by mhirabay          #+#    #+#             */
-/*   Updated: 2021/10/28 13:27:52 by mhirabay         ###   ########.fr       */
+/*   Updated: 2021/11/26 13:20:26 by mhirabay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,13 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		s1_len++;
 	while (s2[s2_len] != '\0')
 		s2_len++;
-	new_str = (char *)malloc(sizeof(char) * (s1_len + s2_len + 1));
+	new_str = NULL;
 	if (new_str == NULL)
+	{
+		// free((char *)s1);
+		// free((char *)s2);
 		return (NULL);
+	}
 	ft_strlcpy(new_str, s1, s1_len + 1);
 	ft_strlcpy(new_str + s1_len, s2, s1_len + s2_len + 1);
 	free((char *)s1);

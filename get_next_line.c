@@ -6,7 +6,7 @@
 /*   By: mhirabay <mhirabay@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/04 15:59:07 by mhirabay          #+#    #+#             */
-/*   Updated: 2021/11/26 11:53:01 by mhirabay         ###   ########.fr       */
+/*   Updated: 2021/11/26 13:16:12 by mhirabay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ char	*process_read_internal(char *tmp_str, t_list *tg_list)
 	ssize_t	null_offset;
 	ssize_t	lf_offset;
 	char	*ret_str;
+	char *tmp;
 
 	lf_offset = ft_strchr_index(tmp_str, '\n');
 	null_offset = ft_strchr_index(tmp_str, '\0');
@@ -54,33 +55,36 @@ char	*process_read_internal(char *tmp_str, t_list *tg_list)
 
 	if (lf_offset != -1)
 	{
-		ret_str = ft_strjoin(tg_list->buf, ft_substr(tmp_str, 0, lf_offset + 1));
+		tmp = ft_substr(tmp_str, 0, lf_offset + 1);
+		ret_str = ft_strjoin(tg_list->buf, tmp);
+		if (ret_str == NULL)
+			free(tmp);
+		
 		// ok
 		// ret_str = NULL;
 		if (!ret_str)
 			free(tg_list->buf);
-		
+		// 解決
 		tg_list->buf = ft_substr(tmp_str, lf_offset + 1, null_offset);
 
 		// ここがnullだとleak
 		// tg_list->buf = NULL;
-		// if(tg_list->buf == NULL)
-		// {
-		// 	free(ret_str);
-		// 	ret_str = NULL;
-		// }
 		free(tmp_str);
 		tmp_str = NULL;
 		return (ret_str);
 	}
-	
-	tg_list->buf = ft_strjoin(tg_list->buf, ft_substr(tmp_str, 0, null_offset));
-	// ここがnullだとleak
-	// tg_list->buf = NULL; 
+	tmp = ft_substr(tmp_str, 0, null_offset);
+	tg_list->buf = ft_strjoin(tg_list->buf, tmp);
+	if (tg_list->buf == NULL)
+		free(tmp);
+	// ここがnullだとleak 未解決だけどわからんから後回し
+	// tg_list->buf = NULL;
+	// free(tg_list->buf);
 	free(tmp_str);
 	tmp_str = NULL;
 	return (NULL);
 }
+#include <stdio.h>
 
 char	*process_read_done(char **tmp, t_list **fd_list, t_list **tg_list)
 {
@@ -89,10 +93,11 @@ char	*process_read_done(char **tmp, t_list **fd_list, t_list **tg_list)
 	free(*tmp);
 	if ((*tg_list)->buf == NULL)
 	{
+		// printf("kita");
 		// free((*tg_list)->buf);
-		// (*tg_list)->buf = NULL;
-		// free(*fd_list);
-		// *fd_list = NULL;
+		// free(*tg_list);
+		free(*fd_list);
+		*fd_list = NULL;
 		return (NULL);
 	}
 	if (*((*tg_list)->buf) != '\0')
