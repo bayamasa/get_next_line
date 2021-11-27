@@ -6,7 +6,7 @@
 /*   By: mhirabay <mhirabay@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/09 18:01:44 by mhirabay          #+#    #+#             */
-/*   Updated: 2021/11/26 13:03:45 by mhirabay         ###   ########.fr       */
+/*   Updated: 2021/11/27 16:53:42 by mhirabay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -262,21 +262,54 @@ void test_invalid_fd()
 	free(c);
 }
 
+// int main()
+// {
+// 	printf("--------------------------------\n");
+// 	// test_no_nl();
+// 	// test_nl();
+// 	// test_empty();
+// 	// test_with_nl();
+// 	// test_multiple_line_no_nl();
+// 	test_multiple_line_with_nl();
+// 	// test_mutiple_line_and_nl_eof_nl();
+	
+// 	// test_big_line_with_nl();
+// 	// get_next_line(50);
+// 	// test_invalid_fd();
+// 	printf("--------------------------------\n");
+// 	system("leaks a.out");
+// 	return (0);
+// }
+
+// #include "leaks_checker.c"
+
 int main()
 {
-	printf("--------------------------------\n");
-	test_no_nl();
-	// test_nl();
-	// test_empty();
-	// test_with_nl();
-	// test_multiple_line_no_nl();
-	// test_multiple_line_with_nl();
-	// test_mutiple_line_and_nl_eof_nl();
+	int fd = open("files/multiple_line_with_nl", O_RDONLY);
+	char *str1 = get_next_line(fd);
+	char *str2 = get_next_line(fd);
+	char *str3 = get_next_line(fd);
+	char *str4 = get_next_line(fd);
+	char *str5 = get_next_line(fd);
+	char *str6 = get_next_line(fd);
+
 	
-	// test_big_line_with_nl();
-	// get_next_line(50);
-	// test_invalid_fd();
-	printf("--------------------------------\n");
+	printf("str1 : %s\n", str1);
+	printf("str2 : %s\n", str2);
+	printf("str3 : %s\n", str3);
+	printf("str4 : %s\n", str4);
+	printf("str5 : %s\n", str5);
+	printf("str6 : %s\n", str6);
+	
+	free(str1);
+	free(str2);
+	free(str3);
+	free(str4);
+	free(str5);
+	free(str6);
+	
+	close(fd);
+	// check_leaks();
 	system("leaks a.out");
-	return (0);
+
 }
