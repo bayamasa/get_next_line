@@ -6,7 +6,7 @@
 /*   By: mhirabay <mhirabay@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 09:49:17 by mhirabay          #+#    #+#             */
-/*   Updated: 2021/11/28 14:24:59 by mhirabay         ###   ########.fr       */
+/*   Updated: 2021/11/28 14:54:08 by mhirabay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,11 +66,11 @@ char	*read_buffering(char **text, int *status)
 char	*finish(ssize_t read_count, char **text, char *read_res)
 {
 	ssize_t	index;
-	char	*tmp;
+	// char	*tmp;
 	char	*ret;
-	size_t	text_len;
 
 	free(read_res);
+	ret = NULL;
 	if (read_count == 0)
 	{
 		if (*text == NULL)
@@ -78,34 +78,26 @@ char	*finish(ssize_t read_count, char **text, char *read_res)
 		index = ft_strchr_index(*text, '\n');
 		if (index == -1)
 		{	
-			if (ft_strlen(*text) == 0)
-			{
-				free(*text);
-				*text = NULL;
-				return (NULL);
-			}
-			ret = ft_strdup(*text);
+			if (ft_strlen(*text) != 0)
+				ret = ft_strdup(*text);
 			free(*text);
 			*text = NULL;
 			return (ret);
 		}
-		else
-		{
-			tmp = ft_substr(*text, index, ft_strlen(*text) - index);
-			if (tmp == NULL)
-				return (NULL);
-			*text[index] = '\0';
-			ret = *text;
-			*text = tmp;
-			return (ret);
-		}
+		// else
+		// {
+		// 	tmp = ft_substr(*text, index, ft_strlen(*text) - index);
+		// 	if (tmp == NULL)
+		// 		return (NULL);
+		// 	*text[index] = '\0';
+		// 	ret = *text;
+		// 	*text = tmp;
+		// 	return (ret);
+		// }
 	}
 	if (read_count == -1)
-	{
 		if (*text != NULL)
 			free(*text);
-		return (NULL);
-	}
 	return (NULL);
 }
 
@@ -120,13 +112,9 @@ char	*store_buffer(char *read_res, char **text, int *status)
 	if (index == -1)
 	{
 		if (*text == NULL)
-		{
 			*text = ft_strdup(read_res);
-			free(read_res);
-			*status = 1;
-			return (NULL);
-		}
-		*text = ft_strjoin(*text, read_res);
+		else
+			*text = ft_strjoin(*text, read_res);
 		if (*text == NULL)
 		{
 			*status = -1;
@@ -162,22 +150,16 @@ char	*store_buffer(char *read_res, char **text, int *status)
 		{
 			*text = ft_strdup(tmp);
 			free(tmp);
-			return (read_res);
 		}
 		else
 		{
 			ret = ft_strjoin(*text, read_res);
-			if (ret == NULL)
-			{
-				free(read_res);
-				*status = -1;
-				return (NULL);
-			}
 			free(read_res);
+			if (ret == NULL)
+				*status = -1;
 			*text = tmp;
 			return (ret);
 		}
-		*status = 1;
 		return (read_res);
 	}
 }
