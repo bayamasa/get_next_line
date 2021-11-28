@@ -6,7 +6,7 @@
 /*   By: mhirabay <mhirabay@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 09:49:17 by mhirabay          #+#    #+#             */
-/*   Updated: 2021/11/28 16:06:33 by mhirabay         ###   ########.fr       */
+/*   Updated: 2021/11/28 16:14:56 by mhirabay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,13 +88,12 @@ char	*finish(ssize_t read_count, char **text, char *read_res)
 			if (text_len != 0)
 				ret = ft_strdup(*text);
 			*text = NULL;
-			return (ret);
 		}
 	}
-	if (read_count == -1)
+	else
 		if (*text != NULL)
 			free(*text);
-	return (NULL);
+	return (ret);
 }
 
 char	*store_buffer(char *read_res, char **text, int *status)
