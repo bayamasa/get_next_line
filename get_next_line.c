@@ -6,7 +6,7 @@
 /*   By: mhirabay <mhirabay@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 09:49:17 by mhirabay          #+#    #+#             */
-/*   Updated: 2021/11/28 14:12:52 by mhirabay         ###   ########.fr       */
+/*   Updated: 2021/11/28 14:24:59 by mhirabay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,17 +42,12 @@ char	*read_buffering(char **text, int *status)
 	char	*tmp;
 	char	*ret;
 
+	*status = 1;
 	if (*text == NULL)
-	{
-		*status = 1;
 		return (NULL);
-	}
 	index = ft_strchr_index(*text, '\n');
 	if (index == -1)
-	{
-		*status = 1;
 		return (NULL);
-	}
 	else
 	{
 		tmp = ft_substr(*text, index + 1, ft_strlen(*text) - (index + 1));
@@ -61,8 +56,6 @@ char	*read_buffering(char **text, int *status)
 			*status = -1;
 			return (NULL);
 		}			
-		// printf("*text : %s\n", *text);
-		*status = 1;
 		(*text)[index + 1] = '\0';
 		ret = *text;
 		*text = tmp;
@@ -75,6 +68,7 @@ char	*finish(ssize_t read_count, char **text, char *read_res)
 	ssize_t	index;
 	char	*tmp;
 	char	*ret;
+	size_t	text_len;
 
 	free(read_res);
 	if (read_count == 0)
@@ -121,6 +115,7 @@ char	*store_buffer(char *read_res, char **text, int *status)
 	char	*tmp;
 	char	*ret;
 
+	*status = 1;
 	index = ft_strchr_index(read_res, '\n');
 	if (index == -1)
 	{
