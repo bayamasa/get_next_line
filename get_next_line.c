@@ -6,7 +6,7 @@
 /*   By: mhirabay <mhirabay@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 09:49:17 by mhirabay          #+#    #+#             */
-/*   Updated: 2021/11/28 09:43:38 by mhirabay         ###   ########.fr       */
+/*   Updated: 2021/11/28 14:12:52 by mhirabay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,9 @@ char	*read_buffering(char **text, int *status)
 		{
 			*status = -1;
 			return (NULL);
-		}
+		}			
+		// printf("*text : %s\n", *text);
+		*status = 1;
 		(*text)[index + 1] = '\0';
 		ret = *text;
 		*text = tmp;
