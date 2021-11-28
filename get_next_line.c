@@ -6,7 +6,7 @@
 /*   By: mhirabay <mhirabay@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 09:49:17 by mhirabay          #+#    #+#             */
-/*   Updated: 2021/11/28 16:14:56 by mhirabay         ###   ########.fr       */
+/*   Updated: 2021/11/28 17:41:23 by mhirabay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,17 +96,48 @@ char	*finish(ssize_t read_count, char **text, char *read_res)
 	return (ret);
 }
 
+char	*store_buffer_2(char *read_res, char **text, int *status, char *tmp)
+{
+	char	*ret;
+	size_t	tmp_len;
+
+	tmp_len = 0;
+	while (tmp[tmp_len] != '\0')
+		tmp_len++;
+	if (tmp_len == 0)
+	{
+		free(tmp);
+		if (*text != NULL)
+		{
+			ret = ft_strjoin(*text, read_res);
+			free(read_res);
+			*text = NULL;
+			return (ret);
+		}
+		return (read_res);
+	}
+	if (*text == NULL)
+		*text = ft_strdup(tmp);
+	else
+	{
+		ret = ft_strjoin(*text, read_res);
+		if (ret == NULL)
+			*status = -1;
+		free(read_res);
+		*text = tmp;
+		return (ret);
+	}
+	return (read_res);
+}
+
 char	*store_buffer(char *read_res, char **text, int *status)
 {
 	ssize_t	index;
 	char	*tmp;
-	char	*ret;
 	size_t	res_len;
-	size_t	tmp_len;
 
-	res_len = 0;
-	tmp_len = 0;
 	*status = 1;
+	res_len = 0;
 	index = ft_strchr_index(read_res, '\n');
 	if (index == -1)
 	{
@@ -125,6 +156,7 @@ char	*store_buffer(char *read_res, char **text, int *status)
 	{
 		while (read_res[res_len] != '\0')
 			res_len++;
+		read_res[index + 1] = '\0';
 		tmp = ft_substr(read_res, index + 1, res_len - (index + 1));
 		if (tmp == NULL)
 		{	
@@ -132,33 +164,7 @@ char	*store_buffer(char *read_res, char **text, int *status)
 			*status = -1;
 			return (NULL);
 		}
-		read_res[index + 1] = '\0';
-		while (tmp[tmp_len] != '\0')
-			tmp_len++;
-		if (tmp_len == 0)
-		{
-			free(tmp);
-			if (*text != NULL)
-			{
-				ret = ft_strjoin(*text, read_res);
-				free(read_res);
-				*text = NULL;
-				return (ret);
-			}
-			return (read_res);
-		}
-		if (*text == NULL)
-			*text = ft_strdup(tmp);
-		else
-		{
-			ret = ft_strjoin(*text, read_res);
-			if (ret == NULL)
-				*status = -1;
-			free(read_res);
-			*text = tmp;
-			return (ret);
-		}
-		return (read_res);
+		return (store_buffer_2(read_res, text, status, tmp));
 	}
 }
 
