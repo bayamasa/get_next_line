@@ -6,13 +6,13 @@
 /*   By: mhirabay <mhirabay@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 09:49:17 by mhirabay          #+#    #+#             */
-/*   Updated: 2021/11/27 16:54:32 by mhirabay         ###   ########.fr       */
+/*   Updated: 2021/11/28 09:33:54 by mhirabay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-#define MYDEBUG() 
+#define MYDEBUG() printf("\x1b[46m%s[%d] %s\x1b[49m\n", __FILE__, __LINE__, __func__);
 
 char	*ft_strdup(const char *src)
 {
@@ -57,14 +57,12 @@ char	*read_buffering(char **text, int *status)
 	if (index == -1)
 	{
 		*status = 1;
-		
 		return (NULL);
 	}
 	else
 	{
 		//tmpには何かが入ってる
 		// 2文字何かしらが入っている
-		
 		tmp = ft_substr(*text, index + 1, ft_strlen(*text) - (index + 1));
 		if (tmp == NULL)
 		{
@@ -73,11 +71,15 @@ char	*read_buffering(char **text, int *status)
 			return (NULL);
 		}
 		(*text)[index + 1] = '\0';
+		// if (ft_strlen(tmp) == 0)
+		// {
+		// 	free(tmp);
+		// 	// segvがおきたらここ
+		// 	// tmp = NULL;
+		// 	// *status = -1;
+		// }
 		ret = *text;
 		*text = tmp;
-		
-		
-
 		return (ret);
 	}
 }
@@ -101,7 +103,14 @@ char	*finish(ssize_t read_count, char **text, char *read_res)
 		// 改行が存在しない
 		if (index == -1)
 		{	
-			// 
+			if (ft_strlen(*text) == 0)
+			{
+				// nlnlのときに既にどこかでfreeされている
+				// → 4回目のとき、つまりreadを読み終わった後にもう一回読み込むときにfreeされている
+				free(*text);
+				*text = NULL;
+				return (NULL);
+			}
 			ret = ft_strdup(*text);
 			free(*text);
 			*text = NULL;
@@ -122,11 +131,10 @@ char	*finish(ssize_t read_count, char **text, char *read_res)
 			return (ret);
 		}
 	}
-	// readが異常終了したとき
-	if (read_count != -1)
+	if (read_count == -1)
 	{
-		free(*text);
-		free(read_res);
+		if (*text != NULL)
+			free(*text);
 		return (NULL);
 	}
 	return (NULL);
@@ -195,7 +203,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	}
 	ft_strlcpy(new_str, s1, s1_len + 1);
 	ft_strlcpy(new_str + s1_len, s2, s1_len + s2_len + 1);
-	// free((char *)s1);
+	free((char *)s1);
 	s1 = NULL;
 	// free((char *)s2);
 	return (new_str);
@@ -225,13 +233,12 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 		size++;
 	if (size < start)
 	{
-		
 		return (ft_strdup(""));
 	}
 	if (size < len)
 		len = size;
 	str = (char *)malloc(sizeof(char) * (len + 1));
-	// str = NULL; 
+	// str = NULL;
 	if (str == NULL)
 		return (NULL);
 	ft_strlcpy(str, s + start, len + 1);
@@ -243,14 +250,13 @@ char	*store_buffer(char *read_res, char **text, int *status)
 	// strlcpyじゃ追加の文字列を追加する時の動的メモリを確保していないのでsegvになる可能性がある。
 	ssize_t	index;
 	char 	*tmp;
+	char	*ret;
 
-	// 
 	index = ft_strchr_index(read_res, '\n');
 	// read_resで改行がない場合
 	if (index == -1)
 	{
 		//strjoinに渡した変数はかえって来れなくする
-		//
 		if (*text == NULL)
 		{
 			// ここでread_resで付け替えたからfreeに注意
@@ -267,21 +273,21 @@ char	*store_buffer(char *read_res, char **text, int *status)
 			*status = -1;
 			return (NULL);
 		}
-		return (*text);
+		free(read_res);
+		return (NULL);
 	}
 	else
 	{
-		
+		// 
 		// read_resで改行がある場合
 		// 後半部分を抜き出す
 		// 改行文字も含めるのでindex + 1
+		// printf("text : %s\n", *text);
 		tmp = ft_substr(read_res, index + 1, ft_strlen(read_res) - (index + 1));
 		// tmpがない場合、tmpは""を返すがgnlはnullを返さないといけない
 		// 改行の後に何も存在しない場合は正常系となるので、正常系に置いてもtmpがnullになるケースは存在する
-		
 		if (tmp == NULL)
 		{	
-			
 			free(read_res);
 			*status = -1;
 			return (NULL);
@@ -290,9 +296,20 @@ char	*store_buffer(char *read_res, char **text, int *status)
 		// → leakしない。
 		// read_resの改行をnull文字にして、gnlの戻り値に設定する。
 		read_res[index + 1] = '\0';
-		// 
 		if (ft_strlen(tmp) == 0)
 		{
+			if (*text != NULL)
+			{
+				ret = ft_strjoin(*text, read_res);
+				free(read_res);
+				//元々あったやつもしかしたらないとバグる箇所があるかも
+				free(tmp);
+				// tmp = ft_strdup(*text);
+				// free(*text);
+				// printf("kita");
+				*text = NULL;
+				return (ret);
+			}
 			free(tmp);
 			return (read_res);
 		}
@@ -304,13 +321,23 @@ char	*store_buffer(char *read_res, char **text, int *status)
 		}
 		else
 		{
-			*text = ft_strjoin(*text, tmp);
-			if (*text == NULL)
+			ret = ft_strjoin(*text, read_res);
+			if (ret == NULL)
 			{
 				free(read_res);
 				*status = -1;
 				return (NULL);
 			}
+			free(read_res);
+			*text = tmp;
+			return (ret);
+			// *text = ft_strjoin(*text, tmp);
+			// if (*text == NULL)
+			// {
+			// 	free(read_res);
+			// 	*status = -1;
+			// 	return (NULL);
+			// }
 		}
 		*status = 1;
 		// 改行の入っている文字列を返す
@@ -327,17 +354,19 @@ char	*get_next_line(int fd)
 	int			status;
 
 	// readしたやつを読み取る
-	// 
+	if (BUFFER_SIZE <= 0)
+		return (NULL);
 	ret = read_buffering(&text, &status);
 	if (ret == NULL && status == -1)
 		return (NULL);
-	if (ret != NULL && status == 1)
+	if (status == 1 && ret != NULL)
 		return (ret);
 	while (1)
 	{
 		read_res = (char *)malloc(sizeof(char) * (size_t)BUFFER_SIZE + 1);
 		read_count = read(fd, read_res, BUFFER_SIZE);
 		*(read_res + read_count) = '\0';
+		// printf("read_count = %zu\n", read_count);
 		if (read_count <= 0)
 			return (finish(read_count, &text, read_res));
 		ret = store_buffer(read_res, &text, &status);
