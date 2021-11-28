@@ -6,13 +6,13 @@
 /*   By: mhirabay <mhirabay@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 09:49:17 by mhirabay          #+#    #+#             */
-/*   Updated: 2021/11/28 14:54:08 by mhirabay         ###   ########.fr       */
+/*   Updated: 2021/11/28 16:06:33 by mhirabay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*ft_strdup(const char *src)
+char	*ft_strdup(char *src)
 {
 	size_t		i;
 	size_t		len;
@@ -33,6 +33,8 @@ char	*ft_strdup(const char *src)
 		i++;
 	}
 	dest[i] = '\0';
+	free(src);
+	src = NULL;
 	return (dest);
 }
 
@@ -41,59 +43,53 @@ char	*read_buffering(char **text, int *status)
 	ssize_t	index;
 	char	*tmp;
 	char	*ret;
+	ssize_t	text_len;
 
-	*status = 1;
+	ret = NULL;
+	text_len = 0;
 	if (*text == NULL)
 		return (NULL);
+	while (*text[text_len] != '\0')
+		text_len++;
 	index = ft_strchr_index(*text, '\n');
-	if (index == -1)
-		return (NULL);
-	else
+	if (index != -1)
 	{
-		tmp = ft_substr(*text, index + 1, ft_strlen(*text) - (index + 1));
-		if (tmp == NULL)
+		tmp = ft_substr(*text, index + 1, text_len - (index + 1));
+		if (tmp != NULL)
 		{
+			(*text)[index + 1] = '\0';
+			ret = *text;
+			*text = tmp;
+		}
+		else
 			*status = -1;
-			return (NULL);
-		}			
-		(*text)[index + 1] = '\0';
-		ret = *text;
-		*text = tmp;
-		return (ret);
 	}
+	return (ret);
 }
 
 char	*finish(ssize_t read_count, char **text, char *read_res)
 {
 	ssize_t	index;
-	// char	*tmp;
 	char	*ret;
+	size_t	text_len;
 
+	text_len = 0;
 	free(read_res);
 	ret = NULL;
 	if (read_count == 0)
 	{
 		if (*text == NULL)
 			return (NULL);
+		while ((*text)[text_len] != '\0')
+			text_len++;
 		index = ft_strchr_index(*text, '\n');
 		if (index == -1)
-		{	
-			if (ft_strlen(*text) != 0)
+		{
+			if (text_len != 0)
 				ret = ft_strdup(*text);
-			free(*text);
 			*text = NULL;
 			return (ret);
 		}
-		// else
-		// {
-		// 	tmp = ft_substr(*text, index, ft_strlen(*text) - index);
-		// 	if (tmp == NULL)
-		// 		return (NULL);
-		// 	*text[index] = '\0';
-		// 	ret = *text;
-		// 	*text = tmp;
-		// 	return (ret);
-		// }
 	}
 	if (read_count == -1)
 		if (*text != NULL)
@@ -106,7 +102,11 @@ char	*store_buffer(char *read_res, char **text, int *status)
 	ssize_t	index;
 	char	*tmp;
 	char	*ret;
+	size_t	res_len;
+	size_t	tmp_len;
 
+	res_len = 0;
+	tmp_len = 0;
 	*status = 1;
 	index = ft_strchr_index(read_res, '\n');
 	if (index == -1)
@@ -114,18 +114,19 @@ char	*store_buffer(char *read_res, char **text, int *status)
 		if (*text == NULL)
 			*text = ft_strdup(read_res);
 		else
-			*text = ft_strjoin(*text, read_res);
-		if (*text == NULL)
 		{
-			*status = -1;
-			return (NULL);
+			*text = ft_strjoin(*text, read_res);
+			free(read_res);
 		}
-		free(read_res);
+		if (*text == NULL)
+			*status = -1;
 		return (NULL);
 	}
 	else
 	{
-		tmp = ft_substr(read_res, index + 1, ft_strlen(read_res) - (index + 1));
+		while (read_res[res_len] != '\0')
+			res_len++;
+		tmp = ft_substr(read_res, index + 1, res_len - (index + 1));
 		if (tmp == NULL)
 		{	
 			free(read_res);
@@ -133,30 +134,28 @@ char	*store_buffer(char *read_res, char **text, int *status)
 			return (NULL);
 		}
 		read_res[index + 1] = '\0';
-		if (ft_strlen(tmp) == 0)
+		while (tmp[tmp_len] != '\0')
+			tmp_len++;
+		if (tmp_len == 0)
 		{
+			free(tmp);
 			if (*text != NULL)
 			{
 				ret = ft_strjoin(*text, read_res);
 				free(read_res);
-				free(tmp);
 				*text = NULL;
 				return (ret);
 			}
-			free(tmp);
 			return (read_res);
 		}
 		if (*text == NULL)
-		{
 			*text = ft_strdup(tmp);
-			free(tmp);
-		}
 		else
 		{
 			ret = ft_strjoin(*text, read_res);
-			free(read_res);
 			if (ret == NULL)
 				*status = -1;
+			free(read_res);
 			*text = tmp;
 			return (ret);
 		}
@@ -177,15 +176,16 @@ char	*get_next_line(int fd)
 	ret = read_buffering(&text, &status);
 	if (ret == NULL && status == -1)
 		return (NULL);
-	if (status == 1 && ret != NULL)
+	if (status == 0 && ret != NULL)
 		return (ret);
 	while (1)
 	{
+		read_res = NULL;
 		read_res = (char *)malloc(sizeof(char) * (size_t)BUFFER_SIZE + 1);
 		read_count = read(fd, read_res, BUFFER_SIZE);
-		*(read_res + read_count) = '\0';
 		if (read_count <= 0)
 			return (finish(read_count, &text, read_res));
+		*(read_res + read_count) = '\0';
 		ret = store_buffer(read_res, &text, &status);
 		if (status == -1 && ret == NULL)
 			return (NULL);

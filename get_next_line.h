@@ -6,7 +6,7 @@
 /*   By: mhirabay <mhirabay@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 09:55:27 by mhirabay          #+#    #+#             */
-/*   Updated: 2021/11/28 09:40:58 by mhirabay         ###   ########.fr       */
+/*   Updated: 2021/11/28 15:59:49 by mhirabay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,7 @@ char	*finish(ssize_t read_count, char **text, char *read_res);
 ssize_t	ft_strchr_index(const char *s, int c);
 size_t	ft_strlcpy(char *dest, const char *src, size_t size);
 char	*ft_strjoin(char const *s1, char const *s2);
-ssize_t	ft_strlen(const char *str);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
-char	*ft_strdup(const char *src);
+char	*ft_strdup(char *src);
 
 #endif

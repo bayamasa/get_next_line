@@ -6,23 +6,11 @@
 /*   By: mhirabay <mhirabay@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/28 09:38:08 by mhirabay          #+#    #+#             */
-/*   Updated: 2021/11/28 09:39:18 by mhirabay         ###   ########.fr       */
+/*   Updated: 2021/11/28 15:33:33 by mhirabay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
-ssize_t	ft_strlen(const char *str)
-{
-	ssize_t	i;
-
-	i = 0;
-	while (str[i] != '\0')
-	{
-		i++;
-	}
-	return (i);
-}
 
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
