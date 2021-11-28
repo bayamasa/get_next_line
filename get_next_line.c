@@ -6,7 +6,7 @@
 /*   By: mhirabay <mhirabay@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 09:49:17 by mhirabay          #+#    #+#             */
-/*   Updated: 2021/11/28 17:41:23 by mhirabay         ###   ########.fr       */
+/*   Updated: 2021/11/28 18:27:41 by mhirabay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,30 +104,28 @@ char	*store_buffer_2(char *read_res, char **text, int *status, char *tmp)
 	tmp_len = 0;
 	while (tmp[tmp_len] != '\0')
 		tmp_len++;
+	if (*text == NULL)
+	{
+		if (tmp_len == 0)
+			free(tmp);
+		else
+			*text = ft_strdup(tmp);
+		return (read_res);
+	}
 	if (tmp_len == 0)
 	{
 		free(tmp);
-		if (*text != NULL)
-		{
-			ret = ft_strjoin(*text, read_res);
-			free(read_res);
-			*text = NULL;
-			return (ret);
-		}
-		return (read_res);
-	}
-	if (*text == NULL)
-		*text = ft_strdup(tmp);
-	else
-	{
 		ret = ft_strjoin(*text, read_res);
-		if (ret == NULL)
-			*status = -1;
 		free(read_res);
-		*text = tmp;
+		*text = NULL;
 		return (ret);
 	}
-	return (read_res);
+	ret = ft_strjoin(*text, read_res);
+	if (ret == NULL)
+		*status = -1;
+	free(read_res);
+	*text = tmp;
+	return (ret);
 }
 
 char	*store_buffer(char *read_res, char **text, int *status)
