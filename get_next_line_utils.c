@@ -6,7 +6,7 @@
 /*   By: mhirabay <mhirabay@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/28 09:38:08 by mhirabay          #+#    #+#             */
-/*   Updated: 2021/11/29 11:06:24 by mhirabay         ###   ########.fr       */
+/*   Updated: 2021/11/29 15:25:19 by mhirabay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,10 @@ char	*ft_substr(char *s, unsigned int start, size_t len)
 	str = (char *)malloc(sizeof(char) * (len + 1));
 	// str = NULL; 
 	if (str == NULL)
+	{
+		free(s);
 		return (NULL);
+	}
 	ft_strlcpy(str, s + start, len + 1);
 	return (str);
 }
