@@ -6,39 +6,13 @@
 /*   By: mhirabay <mhirabay@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 09:49:17 by mhirabay          #+#    #+#             */
-/*   Updated: 2021/11/29 08:11:30 by mhirabay         ###   ########.fr       */
+/*   Updated: 2021/11/29 11:06:51 by mhirabay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
 #define MYDEBUG() printf("\x1b[46m%s[%d] %s\x1b[49m\n", __FILE__, __LINE__, __func__);
-
-char	*ft_strdup(char *src)
-{
-	size_t		i;
-	size_t		len;
-	char		*dest;
-
-	len = 0;
-	if (src == NULL)
-		return (NULL);
-	i = 0;
-	while (src[len] != '\0')
-		len++;
-	dest = (char *)malloc(sizeof(char) * (len + 1));
-	if (dest == NULL)
-		return (NULL);
-	while (i < len)
-	{
-		dest[i] = src[i];
-		i++;
-	}
-	dest[i] = '\0';
-	free(src);
-	src = NULL;
-	return (dest);
-}
 
 char	*read_buffering(char **text, int *status)
 {
@@ -114,22 +88,28 @@ char	*store_buffer_2(char *read_res, char **text, int *status, char *tmp)
 		if (tmp_len == 0)
 			free(tmp);
 		else
+		{
 			*text = ft_strdup(tmp);
+			if (*text == NULL)
+			{
+				free(read_res);
+				read_res = NULL;
+			}
+		}
 		return (read_res);
 	}
 	if (tmp_len == 0)
 	{
 		free(tmp);
 		ret = ft_strjoin(*text, read_res);
-		free(read_res);
 		*text = NULL;
 		return (ret);
 	}
 	ret = ft_strjoin(*text, read_res);
 	if (ret == NULL)
 		*status = -1;
-	free(read_res);
 	*text = tmp;
+	// printf("ret : %s\n", ret);
 	return (ret);
 }
 
@@ -147,13 +127,7 @@ char	*store_buffer(char *read_res, char **text, int *status)
 		if (*text == NULL)
 			*text = ft_strdup(read_res);
 		else
-		{
 			*text = ft_strjoin(*text, read_res);
-			free(read_res);
-		}
-		if (*text == NULL)
-			*status = -1;
-		return (NULL);
 	}
 	else
 	{
@@ -169,6 +143,9 @@ char	*store_buffer(char *read_res, char **text, int *status)
 		read_res[index + 1] = '\0';
 		return (store_buffer_2(read_res, text, status, tmp));
 	}
+	if (*text == NULL)
+		*status = -1;
+	return (NULL);
 }
 
 char	*get_next_line(int fd)
@@ -182,12 +159,12 @@ char	*get_next_line(int fd)
 	if (BUFFER_SIZE <= 0)
 		return (NULL);
 	ret = read_buffering(&text, &status);
-	if (ret == NULL && status == -1)
-		return (NULL);
-	if (status == 1 && ret != NULL)
-		return (ret);
 	while (1)
 	{
+		if (status == -1 && ret == NULL)
+			return (NULL);
+		if (status == 1 && ret != NULL)
+			return (ret);
 		read_res = NULL;
 		read_res = (char *)malloc(sizeof(char) * (size_t)BUFFER_SIZE + 1);
 		read_count = read(fd, read_res, BUFFER_SIZE);
@@ -195,9 +172,5 @@ char	*get_next_line(int fd)
 			return (finish(read_count, &text, read_res));
 		*(read_res + read_count) = '\0';
 		ret = store_buffer(read_res, &text, &status);
-		if (status == -1 && ret == NULL)
-			return (NULL);
-		if (status == 1 && ret != NULL)
-			return (ret);
 	}
 }

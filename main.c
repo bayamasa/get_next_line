@@ -6,7 +6,7 @@
 /*   By: mhirabay <mhirabay@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/09 18:01:44 by mhirabay          #+#    #+#             */
-/*   Updated: 2021/11/29 07:59:00 by mhirabay         ###   ########.fr       */
+/*   Updated: 2021/11/29 11:02:48 by mhirabay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -285,7 +285,7 @@ void test_invalid_fd()
 
 int main()
 {
-	int fd = open("files/multiple_nlx5", O_RDONLY);
+	int fd = open("files/alternate_line_nl_no_nl", O_RDONLY);
 	char *str1 = get_next_line(fd);
 	printf("str1 : %s\n", str1);
 	free(str1);
