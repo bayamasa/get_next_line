@@ -6,7 +6,7 @@
 /*   By: mhirabay <mhirabay@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 09:49:17 by mhirabay          #+#    #+#             */
-/*   Updated: 2021/11/29 16:05:44 by mhirabay         ###   ########.fr       */
+/*   Updated: 2021/11/29 16:08:48 by mhirabay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ char	*finish(char **text, char *read_res)
 	return (ret);
 }
 
-char	*store_buffer_2(char *read_res, char **text, int *status, char *tmp)
+char	*ret_nl(char *read_res, char **text, int *status, char *tmp)
 {
 	size_t	tmp_len;
 
@@ -108,7 +108,7 @@ char	*store_buffer(char *read_res, char **text, int *status, ssize_t res_len)
 		if (tmp != NULL)
 		{	
 			read_res[ft_strchr_index(read_res, '\n') + 1] = '\0';
-			return (store_buffer_2(read_res, text, status, tmp));
+			return (ret_nl(read_res, text, status, tmp));
 		}
 		*status = -1;
 		return (NULL);

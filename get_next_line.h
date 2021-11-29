@@ -6,7 +6,7 @@
 /*   By: mhirabay <mhirabay@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 09:55:27 by mhirabay          #+#    #+#             */
-/*   Updated: 2021/11/29 14:43:37 by mhirabay         ###   ########.fr       */
+/*   Updated: 2021/11/29 16:09:03 by mhirabay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ char	*read_buffering(char **text, int *status, ssize_t text_len);
 char	*get_next_line(int fd);
 char	*store_buffer(	char *read_res, char **text, \
 						int *status, ssize_t res_len);
+char	*ret_nl(char *read_res, char **text, int *status, char *tmp);
 char	*finish(char **text, char *read_res);
 ssize_t	ft_strchr_index(const char *s, int c);
 size_t	ft_strlcpy(char *dest, const char *src, size_t size);
