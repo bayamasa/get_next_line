@@ -1,18 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   gnl_bk.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mhirabay <mhirabay@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 09:49:17 by mhirabay          #+#    #+#             */
-/*   Updated: 2021/11/29 08:11:30 by mhirabay         ###   ########.fr       */
+/*   Updated: 2021/11/29 06:56:05 by mhirabay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
-#define MYDEBUG() printf("\x1b[46m%s[%d] %s\x1b[49m\n", __FILE__, __LINE__, __func__);
 
 char	*ft_strdup(char *src)
 {
@@ -45,14 +43,13 @@ char	*read_buffering(char **text, int *status)
 	ssize_t	index;
 	char	*tmp;
 	char	*ret;
-	size_t	text_len;
+	ssize_t	text_len;
 
 	ret = NULL;
 	text_len = 0;
-	*status = 1;
 	if (*text == NULL)
 		return (NULL);
-	while ((*text)[text_len] != '\0')
+	while (*text[text_len] != '\0')
 		text_len++;
 	index = ft_strchr_index(*text, '\n');
 	if (index != -1)
@@ -90,8 +87,6 @@ char	*finish(ssize_t read_count, char **text, char *read_res)
 		{
 			if (text_len != 0)
 				ret = ft_strdup(*text);
-			else
-				free(*text);
 			*text = NULL;
 		}
 	}
@@ -106,31 +101,30 @@ char	*store_buffer_2(char *read_res, char **text, int *status, char *tmp)
 	char	*ret;
 	size_t	tmp_len;
 
-	tmp_len = 0;
-	while (tmp[tmp_len] != '\0')
-		tmp_len++;
-	if (*text == NULL)
+	if (tmp != NULL)
 	{
+		tmp_len = 0;
+		while (tmp[tmp_len] != '\0')
+			tmp_len++;
 		if (tmp_len == 0)
 			free(tmp);
-		else
-			*text = ft_strdup(tmp);
-		return (read_res);
-	}
-	if (tmp_len == 0)
-	{
-		free(tmp);
+		if (*text == NULL)
+		{
+			if (tmp_len != 0)
+				*text = ft_strdup(tmp);
+			return (read_res);
+		}
 		ret = ft_strjoin(*text, read_res);
-		free(read_res);
-		*text = NULL;
+		if (ret == NULL)
+			*status = -1;
+		if (tmp_len == 0)
+			*text = NULL;
+		else
+			*text = tmp;
 		return (ret);
 	}
-	ret = ft_strjoin(*text, read_res);
-	if (ret == NULL)
-		*status = -1;
 	free(read_res);
-	*text = tmp;
-	return (ret);
+	return (NULL);
 }
 
 char	*store_buffer(char *read_res, char **text, int *status)
@@ -147,28 +141,19 @@ char	*store_buffer(char *read_res, char **text, int *status)
 		if (*text == NULL)
 			*text = ft_strdup(read_res);
 		else
-		{
 			*text = ft_strjoin(*text, read_res);
-			free(read_res);
-		}
-		if (*text == NULL)
-			*status = -1;
-		return (NULL);
 	}
 	else
 	{
 		while (read_res[res_len] != '\0')
 			res_len++;
-		tmp = ft_substr(read_res, index + 1, res_len - (index + 1));
-		if (tmp == NULL)
-		{	
-			free(read_res);
-			*status = -1;
-			return (NULL);
-		}
 		read_res[index + 1] = '\0';
+		tmp = ft_substr(read_res, index + 1, res_len - (index + 1));
 		return (store_buffer_2(read_res, text, status, tmp));
 	}
+	if (*text == NULL)
+		*status = -1;
+	return (NULL);
 }
 
 char	*get_next_line(int fd)
@@ -184,7 +169,7 @@ char	*get_next_line(int fd)
 	ret = read_buffering(&text, &status);
 	if (ret == NULL && status == -1)
 		return (NULL);
-	if (status == 1 && ret != NULL)
+	if (status == 0 && ret != NULL)
 		return (ret);
 	while (1)
 	{

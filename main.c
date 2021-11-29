@@ -6,7 +6,7 @@
 /*   By: mhirabay <mhirabay@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/09 18:01:44 by mhirabay          #+#    #+#             */
-/*   Updated: 2021/11/28 14:19:21 by mhirabay         ###   ########.fr       */
+/*   Updated: 2021/11/29 07:59:00 by mhirabay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -262,64 +262,82 @@ void test_invalid_fd()
 	free(c);
 }
 
-int main()
-{
-	printf("--------------------------------\n");
-	test_no_nl();
-	test_nl();
-	test_empty();
-	test_with_nl();
-	test_multiple_line_no_nl();
-	test_multiple_line_with_nl();
-	test_mutiple_line_and_nl_eof_nl();
+// int main()
+// {
+// 	printf("--------------------------------\n");
+// 	test_no_nl();
+// 	test_nl();
+// 	test_empty();
+// 	test_with_nl();
+// 	test_multiple_line_no_nl();
+// 	test_multiple_line_with_nl();
+// 	test_mutiple_line_and_nl_eof_nl();
 
-	test_big_line_with_nl();
-	get_next_line(50);
-	test_invalid_fd();
-	printf("--------------------------------\n");
-	system("leaks a.out");
-	return (0);
-}
+// 	test_big_line_with_nl();
+// 	get_next_line(50);
+// 	test_invalid_fd();
+// 	printf("--------------------------------\n");
+// 	system("leaks a.out");
+// 	return (0);
+// }
 
 // #include "leaks_checker.c"
 
-// int main()
-// {
-// 	int fd = open("files/multiple_line_no_nl", O_RDONLY);
-// 	char *str1 = get_next_line(fd);
-// 	printf("str1 : %s\n", str1);
-// 	free(str1);
-// 	char *str2 = get_next_line(fd);
-// 	printf("str2 : %s\n", str2);
-// 	free(str2);
-// 	char *str3 = get_next_line(fd);
-// 	printf("str3 : %s\n", str3);
-// 	free(str3);
+int main()
+{
+	int fd = open("files/multiple_nlx5", O_RDONLY);
+	char *str1 = get_next_line(fd);
+	printf("str1 : %s\n", str1);
+	free(str1);
+	char *str2 = get_next_line(fd);
+	printf("str2 : %s\n", str2);
+	free(str2);
+	char *str3 = get_next_line(fd);
+	printf("str3 : %s\n", str3);
+	free(str3);
 
-// 	char *str4 = get_next_line(fd);
-// 	printf("str4 : %s\n", str4);
-// 	free(str4);
+	char *str4 = get_next_line(fd);
+	printf("str4 : %s\n", str4);
+	free(str4);
 
-// 	char *str5 = get_next_line(fd);
-// 	printf("str5 : %s\n", str5);
-// 	free(str5);
-// 	// char *str6 = get_next_line(fd);
+	char *str5 = get_next_line(fd);
+	printf("str5 : %s\n", str5);
+	free(str5);
+	
+	char *str6 = get_next_line(fd);
+	printf("str6 : %s\n", str6);
+	free(str6);
+	char *str7 = get_next_line(fd);
+	printf("str7 : %s\n", str7);
+	free(str7);
+	// char *str8 = get_next_line(fd);
+	// printf("str8 : %s\n", str8);
+	// free(str8);
+	// char *str9 = get_next_line(fd);
+	// printf("str9 : %s\n", str9);
+	// free(str9);
+	// char *str10 = get_next_line(fd);
+	// printf("str10 : %s\n", str10);
+	// free(str10);
 
-// 	// printf("str1 : %s\n", str1);
-// 	// printf("str2 : %s\n", str2);
-// 	// printf("str3 : %s\n", str3);
-// 	// printf("str4 : %s\n", str4);
-// 	// printf("str5 : %s\n", str5);
-// 	// printf("str6 : %s\n", str6);
+	
+	// char *str6 = get_next_line(fd);
+
+	// printf("str1 : %s\n", str1);
+	// printf("str2 : %s\n", str2);
+	// printf("str3 : %s\n", str3);
+	// printf("str4 : %s\n", str4);
+	// printf("str5 : %s\n", str5);
+	// printf("str6 : %s\n", str6);
 
 
 
-// 	// printf("%s",str6);
-// 	// free(str6);
+	// printf("%s",str6);
+	// free(str6);
 
-// 	close(fd);
-// 	// check_leaks();
-// 	// system("leaks a.out");
+	close(fd);
+	// check_leaks();
+	system("leaks a.out");
 
-// }
+}
 // 読み込んだ後にもう一回freeしたらどうなるか確認するテストを追加
