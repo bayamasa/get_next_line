@@ -6,13 +6,11 @@
 /*   By: mhirabay <mhirabay@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 09:49:17 by mhirabay          #+#    #+#             */
-/*   Updated: 2021/11/29 15:33:29 by mhirabay         ###   ########.fr       */
+/*   Updated: 2021/11/29 16:05:44 by mhirabay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
-#define MYDEBUG() printf("\x1b[46m%s[%d] %s\x1b[49m\n", __FILE__, __LINE__, __func__);
 
 char	*read_buffering(char **text, int *status, ssize_t text_len)
 {
@@ -69,7 +67,6 @@ char	*finish(char **text, char *read_res)
 
 char	*store_buffer_2(char *read_res, char **text, int *status, char *tmp)
 {
-	char	*ret;
 	size_t	tmp_len;
 
 	tmp_len = 0;
@@ -77,27 +74,23 @@ char	*store_buffer_2(char *read_res, char **text, int *status, char *tmp)
 		tmp_len++;
 	if (tmp_len == 0)
 		free(tmp);
-	if (*text == NULL)
+	if (*text != NULL)
 	{	
-		if (tmp_len != 0)
-		{
-			*text = ft_strdup(tmp);
-			if (*text == NULL)
-			{
-				free(read_res);
-				read_res = NULL;
-			}
-		}
-		return (read_res);
+		read_res = ft_strjoin(*text, read_res);
+		if (read_res == NULL)
+			*status = -1;
+		if (tmp_len == 0)
+			*text = NULL;
+		else
+			*text = tmp;
 	}
-	ret = ft_strjoin(*text, read_res);
-	if (ret == NULL)
-		*status = -1;
-	if (tmp_len == 0)
-		*text = NULL;
-	else
-		*text = tmp;
-	return (ret);
+	if (tmp_len == 0 || *text != NULL)
+		return (read_res);
+	*text = ft_strdup(tmp);
+	if (*text != NULL)
+		return (read_res);
+	free(read_res);
+	return (NULL);
 }
 
 char	*store_buffer(char *read_res, char **text, int *status, ssize_t res_len)

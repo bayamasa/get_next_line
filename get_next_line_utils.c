@@ -6,13 +6,11 @@
 /*   By: mhirabay <mhirabay@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/28 09:38:08 by mhirabay          #+#    #+#             */
-/*   Updated: 2021/11/29 15:25:19 by mhirabay         ###   ########.fr       */
+/*   Updated: 2021/11/29 16:05:34 by mhirabay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
-#define MYDEBUG() printf("\x1b[46m%s[%d] %s\x1b[49m\n", __FILE__, __LINE__, __func__);
 
 char	*ft_substr(char *s, unsigned int start, size_t len)
 {
@@ -30,9 +28,7 @@ char	*ft_substr(char *s, unsigned int start, size_t len)
 	}
 	if (size < len)
 		len = size;
-	// MYDEBUG();
 	str = (char *)malloc(sizeof(char) * (len + 1));
-	// str = NULL; 
 	if (str == NULL)
 	{
 		free(s);
@@ -56,9 +52,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		s1_len++;
 	while (s2[s2_len] != '\0')
 		s2_len++;
-	// MYDEBUG();
 	new_str = (char *)malloc(sizeof(char) * (s1_len + s2_len + 1));
-	// new_str = NULL; 
 	if (new_str == NULL)
 	{
 		free((char *)s1);
@@ -125,9 +119,7 @@ char	*ft_strdup(char *src)
 	i = 0;
 	while (src[len] != '\0')
 		len++;
-	// MYDEBUG();
 	dest = (char *)malloc(sizeof(char) * (len + 1));
-	// dest = NULL;
 	if (dest == NULL)
 	{
 		free(src);
