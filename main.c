@@ -6,7 +6,7 @@
 /*   By: mhirabay <mhirabay@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/09 18:01:44 by mhirabay          #+#    #+#             */
-/*   Updated: 2022/02/01 21:03:36 by mhirabay         ###   ########.fr       */
+/*   Updated: 2022/02/01 21:22:26 by mhirabay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -262,21 +262,20 @@ void test_invalid_fd()
 	free(c);
 }
 
-// int main()
-// {
-// 	printf("--------------------------------\n");
-// 	test_no_nl();
-// 	test_nl();
-// 	test_empty();
-// 	test_with_nl();
-// 	test_multiple_line_no_nl();
-// 	test_multiple_line_with_nl();
-// 	test_mutiple_line_and_nl_eof_nl();
-
-// 	test_big_line_with_nl();
-// 	get_next_line(50);
-// 	test_invalid_fd();
-// 	printf("--------------------------------\n");
-// 	system("leaks a.out");
-// 	return (0);
-// }
+int main()
+{
+	printf("--------------------------------\n");
+	test_no_nl();
+	test_nl();
+	test_empty();
+	test_with_nl();
+	test_multiple_line_no_nl();
+	test_multiple_line_with_nl();
+	test_mutiple_line_and_nl_eof_nl();
+	test_big_line_with_nl();
+	get_next_line(50);
+	test_invalid_fd();
+	printf("--------------------------------\n");
+	system("leaks a.out");
+	return (0);
+}
