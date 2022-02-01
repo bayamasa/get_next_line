@@ -6,7 +6,7 @@
 /*   By: mhirabay <mhirabay@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/09 18:01:44 by mhirabay          #+#    #+#             */
-/*   Updated: 2021/10/10 15:57:14 by mhirabay         ###   ########.fr       */
+/*   Updated: 2022/02/01 21:02:46 by mhirabay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -258,7 +258,7 @@ int main()
 {
 	printf("--------------------------------\n");
 	test_no_nl();
-	// bonus_multiple_open();
+	bonus_multiple_open();
 	printf("--------------------------------\n");
 	// check_leaks();
 	system("leaks a.out");
