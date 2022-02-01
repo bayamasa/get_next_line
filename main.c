@@ -6,7 +6,7 @@
 /*   By: mhirabay <mhirabay@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/09 18:01:44 by mhirabay          #+#    #+#             */
-/*   Updated: 2022/02/01 21:22:26 by mhirabay         ###   ########.fr       */
+/*   Updated: 2022/02/01 21:43:04 by mhirabay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -252,7 +252,6 @@ void test_invalid_fd()
 {
 	int fd = open("files/no_nl", O_RDONLY);
 	close(fd);
-	printf("fd = %d\n", fd);
 	char *a = get_next_line(fd);
 	char *b = get_next_line(fd);
 	char *c = get_next_line(10000);
